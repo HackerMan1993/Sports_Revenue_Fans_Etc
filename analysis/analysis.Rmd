@@ -13,7 +13,57 @@ knitr::opts_chunk$set(echo = TRUE)
 source("useful_functions.R")
 ```
 
-# Introduction
 <a href="#top">Back to top</a>
 
-Use this R Markdown to perform the main analysis for the project. I use this basically as a lab notebook. It contains the main analysis and a variety of sensitivity analysis. The code in this documents serves as a baseline for the eventual tables and figures that will go into the paper. At the same time it will serve as a record of all supplementary analyses performed. 
+```Histogram
+ hist(basketball$revenue, col= "turquoise3", xlab= "Revenue (in dollars)", main=NULL)
+```
+#Histograms for frequency of revenue (gender would be nice), to show how much schools are making and how common it is (better bins to get more accuracy). A histogram of attendance and records would be good too, as well as march madness appearances.
+``` Scatterplot
+plot(basketball$attendance, basketball$revenue, xlab="Attendance", ylab="Revenue (in dollars)",
+     main=NULL, pch=21, bg="slateblue4", col="tomato2")
+```
+#I want to include at least one scatterplot, this suggests the relationship between attendance and revenue is linear (again, how about making one for men and one for women?) (better labels too)
+
+``` Scatterplot_2
+plot(basketball$win_percent, basketball$revenue, xlab="Win Percentage", ylab="Revenue (in dollars)",
+     main=NULL, pch=21, bg="slateblue4", col="tomato2")
+```
+#This would show that revenue and win percentage are somewhat related but not as much as one would think. (same, men and women?) (better labels)
+
+#Name: Revenue Model
+```
+summary(lm(revenue~school+year+gender+win_percent+march_madness, data=basketball))
+```
+#Seems to show that UW and UCLA have stat sig. revenue compared to the other schools, the most recent year seems to be stat sig. (changing perception), and gender is highly related to revenue (women's sports make less)
+
+#Name: Log Revenue Model
+```
+summary(lm(log(revenue)~school+year+gender+win_percent+march_madness, data=basketball))
+```
+#I can't remember the line of reasoning we came up with but when we take the log of our data, every year but 2010-2011 are significant. UCLA and UW lose stat sig. but UO gains it at the .001 level. When we evaluate women's basketball and use the function exp(-1.9), we find that women's sports earn roughly 15 percent of men's.
+
+#Name: Log Attendance Model
+```
+summary(lm(log(attendance)~school+year+gender+win_percent+march_madness, data=basketball))
+```
+#Using the log of attendance, we see that USC and WSU have significance, as well as 2013-2014. Gender and win percentage are also stat sig; we can expect a team that wins to have more people attending. When we use the exponential funciton, exp(-1.26), we see that women have roughly 28% of the men's attendance
+
+#Name: Error Code Chunk (will change)
+```
+summary(lm(log(attendance)~school+as.numeric(year)+gender+win_percent+march_madness, data=basketball))
+```
+#Now I get an error message when I try to run this line of code but we worked on it together.
+
+#Name: Attendance Interaction Model
+```
+summary(lm(log(attendance)~school+year*gender+win_percent+march_madness, data=basketball))
+```
+#Our interaction line of code shows high stat. sig. in gender and win percentage as well as USC and WSU; they seem to have lower attendance than the other schools. Attendance seems to correlate with gender and no year really stands out for women's attendance.
+
+#Name: Revenue Interaction Model
+```
+summary(lm(log(revenue)~school+year*gender+win_percent+march_madness, data=basketball))
+```
+#Our other interaction line of code shows stat. sig. in gender and at the UO. The UO seems to have a low revenue stream for its women's basketball team, especially when compared to other schools. Gender is still stat. sig, suggesting that women's sports still make less money, regardless of the year or record.
+<a href="#top">Back to top</a>
